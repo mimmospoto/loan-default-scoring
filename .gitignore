@@ -1,0 +1,24 @@
+# Data is never committed; see `python -m loan_default.data.download`
+/data/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+
+# MLflow local store
+mlruns/
+mlflow.db
+
+# Secrets
+.env
+kaggle.json
+
+# OS / editor
+.DS_Store
+.vscode/
