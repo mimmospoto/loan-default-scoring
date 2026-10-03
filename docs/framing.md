@@ -2,8 +2,8 @@
 
 This document fixes what the model predicts, on which loans, and with which
 inputs, before any modelling. The same decisions live as code in
-[`config.py`](../src/loan_default/config.py) and
-[`columns.py`](../src/loan_default/columns.py);
+[`config.py`](../loan_default/config.py) and
+[`columns.py`](../loan_default/columns.py);
 `python -m loan_default.data.profile` checks them against the data.
 
 > Status: checked against `accepted_2007_to_2018Q4.csv` (2,260,668 loans,

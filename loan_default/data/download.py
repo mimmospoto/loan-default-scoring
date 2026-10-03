@@ -24,7 +24,7 @@ def main() -> int:
         api = KaggleApi()
         api.authenticate()
     except ImportError:
-        print("kaggle is not installed; install the 'data' dependency group.", file=sys.stderr)
+        print("kaggle is not installed; run: pip install -r requirements-dev.txt", file=sys.stderr)
         return 1
     except (Exception, SystemExit) as exc:
         print(f"Kaggle authentication failed: {exc}", file=sys.stderr)

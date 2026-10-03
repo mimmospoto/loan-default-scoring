@@ -20,9 +20,9 @@ key to `~/.kaggle/access_token` (plain text, `chmod 600`), or run
 
 ```bash
 python3 -m venv .venv
-.venv/bin/pip install -e . --group data   # or: pip install -e ".[data]" on older pip
-PYTHONPATH=src .venv/bin/python -m loan_default.data.download  # fetches data into data/raw/
-PYTHONPATH=src .venv/bin/python -m loan_default.data.profile   # checks the framing against the data
+.venv/bin/pip install -r requirements.txt -r requirements-dev.txt
+.venv/bin/python -m loan_default.data.download  # fetches data into data/raw/
+.venv/bin/python -m loan_default.data.profile   # checks the framing against the data
 ```
 
 The data is never committed to this repository.
