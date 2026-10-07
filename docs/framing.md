@@ -51,17 +51,17 @@ leave too few years for an out-of-time split.
 
 | Period | Issue months | Loans | Terminal | Default rate | Used for |
 |---|---|---|---|---|---|
-| Train | 2012-01 to 2014-12 | 306,462 | 100.0% | 13.2% | Fitting, calibration, band thresholds |
+| Train | 2012-05 to 2014-12 | 297,284 | 100.0% | 13.3% | Fitting, calibration, band thresholds |
 | Test | 2015-01 to 2015-10 | 227,565 | 100.0% | 14.8% | All reported model metrics |
 | Drift | 2016-01 to 2017-12 | 643,914 | 56.0% | — | Feature drift (PSI) for the monitoring demo |
 
 The split is by issue month, never random, because the service will always
 score loans newer than anything it was trained on.
 
-Training starts in 2012 because volume in 2007–2011 is thin (603 to 14,101
-36-month loans per year, vs. 43,000+ from 2012 on) and 2011 and earlier are
-already 100% terminal, leaving no margin to push the start earlier without
-thinning the training set further.
+Training starts in 2012-05 for two reasons. Volume in 2007–2011 is thin (603
+to 14,101 36-month loans per year, against 43,000+ from 2012 on). And two
+features, `mort_acc` and `acc_open_past_24mths`, are empty in the file for
+loans issued before 2012-04 and only fully populated from 2012-05.
 
 The test period ends 2015-10, not 2015-12: the file's last `last_pymnt_d` is
 2019-03, so the last 36-month vintage fully matured (term + 5-month
@@ -86,8 +86,11 @@ is named explicitly, so a leaking column cannot enter by accident.
 | Public records | `pub_rec`, `pub_rec_bankruptcies` |
 | Revolving credit | `revol_bal`, `revol_util` |
 
-`earliest_cr_line` is converted to the length of credit history at the issue
-date. The set is kept small on purpose: every feature becomes a typed,
+Three raw columns are reshaped before modelling: `earliest_cr_line` becomes
+`credit_history_months` (months of credit history at the issue date),
+`emp_length` becomes `emp_length_years` (0 to 10), and `fico_range_low`
+is renamed `fico`. Rare `home_ownership` values are merged into `OTHER`.
+The set is kept small on purpose: every feature becomes a typed,
 range-checked field in the API contract.
 
 ## Exclusions
@@ -112,9 +115,27 @@ and because the service is meant to be called before a price exists.
 
 Kaggle dataset `wordsforthewise/lending-club`, file
 `accepted_2007_to_2018Q4.csv` (the Q4 extract — the brief's working title
-named Q2, which does not exist in this mirror). License: not yet verified;
-see the repository root for status. The file is never committed; run
-`python -m loan_default.data.download` to fetch it.
+named Q2, which does not exist in this mirror). The file is never committed;
+run `python -m loan_default.data.download` to fetch it.
+
+### License
+
+| Source | What it says |
+|---|---|
+| Kaggle dataset page | Licensed CC0: Public Domain (read from the Kaggle API, 2026-10-05) |
+| LendingClub terms of use | Restrict scraping the website and copying its content. They do not mention the downloadable historical loan files (the site is now run by Happen Bank) |
+
+CC0 is the label set by the Kaggle uploader. It does not prove that the
+uploader had the right to release the data, and LendingClub's terms do not
+settle the question either. This project therefore takes the cautious route:
+
+- The data is not in the repository and is not redistributed. Every user
+  downloads it from Kaggle.
+- The repository contains only code, documentation and aggregate results.
+  It publishes no loan-level rows.
+- The trained model file is not committed (`artifacts/` is git-ignored).
+
+This is a portfolio project, not legal advice.
 
 ## Known limitations
 
