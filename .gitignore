@@ -22,3 +22,6 @@ kaggle.json
 
 # Trained model files
 artifacts/
+
+# Personal notebooks
+notebook/
