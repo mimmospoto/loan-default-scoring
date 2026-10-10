@@ -1,22 +1,20 @@
-"""Tune, validate and train the models, evaluate them out of time, and save the chosen one.
+"""Tune, validate and train the models, evaluate them out of time, and register the result.
 
 Run: python -m loan_default.train
 """
 
 from __future__ import annotations
 
-import json
+import argparse
 import sys
 from datetime import datetime, timezone
 
-import joblib
 import lightgbm
 import pandas as pd
 import sklearn
 
 from loan_default.bands import fit_thresholds
 from loan_default.config import (
-    ARTIFACTS_DIR,
     BAND_LABELS,
     CALIBRATION_PERIOD,
     FIT_PERIOD,
@@ -27,12 +25,18 @@ from loan_default.config import (
 from loan_default.features import MODEL_FEATURES
 from loan_default.metrics import band_table, discrimination, feature_psi, psi
 from loan_default.model import build_baseline, build_gbm, fit_calibrated, predict_pd
+from loan_default.registry import log_run
 from loan_default.splits import between, split_xy
 from loan_default.tune import tune_gbm
 from loan_default.validate import walk_forward
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser(description="Tune, train and register the model.")
+    parser.add_argument("--name", help="run name in MLflow (default: lgbm-<date>-<time>)")
+    parser.add_argument("--note", help="why this run was made, shown in 'registry list'")
+    args = parser.parse_args()
+
     if not PROCESSED_FILE.exists():
         print("No modelling table. Run: python -m loan_default.data.prepare", file=sys.stderr)
         return 1
@@ -74,8 +78,6 @@ def main() -> int:
     print(f"PSI train -> test, model PD: {score_psi:.4f}")
     print(features_psi.head(5).round(4).to_string(), "\n")
 
-    ARTIFACTS_DIR.mkdir(exist_ok=True)
-    joblib.dump(model, ARTIFACTS_DIR / "model.joblib")
     metadata = {
         "trained_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "sklearn_version": sklearn.__version__,
@@ -91,8 +93,20 @@ def main() -> int:
         "test_bands": bands.to_dict(orient="index"),
         "psi_train_test": {"pd": score_psi, "features": features_psi.to_dict()},
     }
-    (ARTIFACTS_DIR / "metadata.json").write_text(json.dumps(metadata, indent=2))
-    print(f"Saved model and metadata to {ARTIFACTS_DIR}")
+    params = {
+        **gbm_params,
+        "fit_period": " to ".join(FIT_PERIOD),
+        "calibration_period": " to ".join(CALIBRATION_PERIOD),
+        "test_period": " to ".join(TEST_PERIOD),
+        "n_features": len(MODEL_FEATURES),
+    }
+    metrics = {f"test_{metric}_{name}": value for name, scores in test_metrics.items() for metric, value in scores.items()}
+    metrics["psi_pd_train_test"] = score_psi
+    metrics["test_mean_pd"] = float(pd_test.mean())
+    metrics["test_default_rate"] = float(y_test.mean())
+    version = log_run(model, metadata, params, metrics, input_example=X_test.head(5), name=args.name, note=args.note)
+    print(f"Logged to MLflow and registered as version {version}.")
+    print(f"To put it live: python -m loan_default.registry promote {version}")
     return 0
 
 

@@ -3,7 +3,7 @@
 A credit default model taken from training to a live, monitored API. The
 model is deliberately simple; the engineering around it is the point.
 
-**Status:** Phase 2 of 9 (model). The model trains and is evaluated; no endpoint yet.
+**Status:** Phase 3 of 9 (registry). The model trains, is tracked and versioned; no endpoint yet.
 
 ## What it does
 
@@ -13,6 +13,7 @@ default and a risk band (A–E).
 - [docs/framing.md](docs/framing.md): target, cohort, validation split, and
   feature rules.
 - [docs/model.md](docs/model.md): model design and out-of-time results.
+- [docs/registry.md](docs/registry.md): how a model version goes live.
 
 On loans issued in 2015, unseen in training, the model reaches an AUC of
 0.681 (Gini 0.362), against 0.674 for a logistic regression baseline.
@@ -31,7 +32,9 @@ python3 -m venv .venv
 .venv/bin/python -m loan_default.data.download  # fetches data into data/raw/
 .venv/bin/python -m loan_default.data.profile   # checks the framing against the data
 .venv/bin/python -m loan_default.data.prepare   # builds the modelling table
-.venv/bin/python -m loan_default.train          # trains, evaluates, saves to artifacts/
+.venv/bin/python -m loan_default.train          # tunes, trains, logs to MLflow (--name, --note optional)
+.venv/bin/python -m loan_default.registry promote 1   # makes version 1 the champion
+.venv/bin/python -m loan_default.registry export      # writes the champion to artifacts/
 .venv/bin/python -m pytest                      # runs the tests
 ```
 
