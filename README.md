@@ -3,7 +3,7 @@
 A credit default model taken from training to a live, monitored API. The
 model is deliberately simple; the engineering around it is the point.
 
-**Status:** Phase 3 of 9 (registry). The model trains, is tracked and versioned; no endpoint yet.
+**Status:** Phase 4 of 9 (API). The model trains, is versioned, and is served locally with FastAPI; not deployed yet.
 
 ## What it does
 
@@ -14,6 +14,7 @@ default and a risk band (A–E).
   feature rules.
 - [docs/model.md](docs/model.md): model design and out-of-time results.
 - [docs/registry.md](docs/registry.md): how a model version goes live.
+- [docs/api.md](docs/api.md): endpoints, input rules, and design decisions.
 
 On loans issued in 2015, unseen in training, the model reaches an AUC of
 0.681 (Gini 0.362), against 0.674 for a logistic regression baseline.
@@ -35,6 +36,7 @@ python3 -m venv .venv
 .venv/bin/python -m loan_default.train          # tunes, trains, logs to MLflow (--name, --note optional)
 .venv/bin/python -m loan_default.registry promote 1   # makes version 1 the champion
 .venv/bin/python -m loan_default.registry export      # writes the champion to artifacts/
+.venv/bin/python -m uvicorn loan_default.api:app      # serves the API at http://127.0.0.1:8000/docs
 .venv/bin/python -m pytest                      # runs the tests
 ```
 

@@ -3,5 +3,8 @@ scikit-learn==1.9.1
 lightgbm==4.7.0
 pyarrow==25.0.1
 mlflow==3.17.0
+fastapi==0.143.0
+uvicorn==0.54.0
+pydantic==2.14.0
 # Newer versions have no pre-built package for Intel Macs.
 cryptography==48.0.1
