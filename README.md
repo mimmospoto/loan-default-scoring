@@ -24,6 +24,35 @@ On loans issued in 2015, unseen in training, the model reaches an AUC of
 0.681 (Gini 0.362), against 0.674 for a logistic regression baseline.
 Observed default rates rise from 4.9% in band A to 26.8% in band E.
 
+## Try it
+
+The trained model is in the repo, so scoring needs no data and no training.
+
+```bash
+git clone https://github.com/mimmospoto/loan-default-scoring.git
+cd loan-default-scoring
+docker build -t loan-default .
+docker run --rm -p 8000:8000 loan-default
+```
+
+Then open [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs) and use
+"Try it out" on `POST /predict`, or send a request:
+
+```bash
+curl -X POST http://127.0.0.1:8000/predict -H "Content-Type: application/json" -d '{
+  "purpose": "debt_consolidation", "home_ownership": "RENT",
+  "verification_status": "Verified", "loan_amnt": 12000, "annual_inc": 55000,
+  "dti": 18.5, "fico": 690, "credit_history_months": 150, "delinq_2yrs": 0,
+  "inq_last_6mths": 1, "open_acc": 9, "total_acc": 20, "pub_rec": 0,
+  "pub_rec_bankruptcies": 0, "revol_bal": 9000, "mort_acc": 0,
+  "acc_open_past_24mths": 3, "emp_length_years": 4, "revol_util": 52
+}'
+```
+
+The response has `pd`, `risk_band`, `model_version` and `request_id`. Without
+Docker: `pip install -r requirements.txt`, then
+`python -m uvicorn loan_default.api:app`.
+
 ## Setup
 
 Requires Python 3.12+ and a Kaggle API token. Generate one at

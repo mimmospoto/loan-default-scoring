@@ -9,7 +9,7 @@ Build order. Each phase ends with something working.
 | 3 | Registry (MLflow) | Done | Versioned model, exported to `artifacts/` |
 | 4 | API (FastAPI) | Done | `/predict`, `/predict/batch`, `/health` running locally |
 | 5 | Docker | Done | Container that gives the same predictions as training |
-| 6 | Tests + CI | Done locally, CI run pending | Green CI badge |
+| 6 | Tests + CI | Done | Green CI badge |
 | 7 | Deploy (Azure Container Apps) | Next | Live endpoint, automated deploy |
 | 8 | Monitoring | Not started | Scheduled drift report, shown firing once |
 | 9 | Retraining | Optional | Automated retrain and promotion check |
