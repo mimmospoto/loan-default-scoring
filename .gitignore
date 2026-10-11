@@ -20,8 +20,10 @@ kaggle.json
 .DS_Store
 .vscode/
 
-# Trained model files
-artifacts/
+# Trained model: only the exported champion is committed (see docs/ci.md)
+artifacts/*
+!artifacts/model.joblib
+!artifacts/metadata.json
 
 # Personal notebooks
 notebook/

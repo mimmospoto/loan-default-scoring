@@ -1,6 +1,7 @@
 """The Docker image must give the same predictions as the training code.
 
 Needs Docker, a built image and an exported model; otherwise it is skipped.
+CI sets REQUIRE_CONTAINER=1 so a missing image fails instead of skipping.
 Build first: docker build -t loan-default:dev .   (override the name with IMAGE)
 """
 
@@ -29,9 +30,10 @@ def docker_ready() -> bool:
     return subprocess.run(["docker", "image", "inspect", IMAGE], capture_output=True).returncode == 0
 
 
+REQUIRED = bool(os.environ.get("REQUIRE_CONTAINER"))
 pytestmark = [
-    pytest.mark.skipif(not docker_ready(), reason=f"Docker image {IMAGE} not available"),
-    pytest.mark.skipif(not (ARTIFACTS_DIR / "model.joblib").exists(), reason="no exported model"),
+    pytest.mark.skipif(not REQUIRED and not docker_ready(), reason=f"Docker image {IMAGE} not available"),
+    pytest.mark.skipif(not REQUIRED and not (ARTIFACTS_DIR / "model.joblib").exists(), reason="no exported model"),
 ]
 
 

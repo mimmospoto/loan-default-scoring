@@ -1,9 +1,11 @@
 # Loan default scoring service
 
+[![CI](https://github.com/mimmospoto/loan-default-scoring/actions/workflows/ci.yml/badge.svg)](https://github.com/mimmospoto/loan-default-scoring/actions/workflows/ci.yml)
+
 A credit default model taken from training to a live, monitored API. The
 model is deliberately simple; the engineering around it is the point.
 
-**Status:** Phase 5 of 9 (Docker). The model trains, is versioned, and is served with FastAPI, locally or in a container; not deployed yet.
+**Status:** Phase 6 of 9 (CI). The model trains, is versioned, and is served with FastAPI, locally or in a container; tests run in CI; not deployed yet.
 
 ## What it does
 
@@ -16,6 +18,7 @@ default and a risk band (A–E).
 - [docs/registry.md](docs/registry.md): how a model version goes live.
 - [docs/api.md](docs/api.md): endpoints, input rules, and design decisions.
 - [docs/docker.md](docs/docker.md): the image, and how it is tested against training.
+- [docs/ci.md](docs/ci.md): what CI runs and why the model is committed.
 
 On loans issued in 2015, unseen in training, the model reaches an AUC of
 0.681 (Gini 0.362), against 0.674 for a logistic regression baseline.

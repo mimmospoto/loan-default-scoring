@@ -9,8 +9,8 @@ Build order. Each phase ends with something working.
 | 3 | Registry (MLflow) | Done | Versioned model, exported to `artifacts/` |
 | 4 | API (FastAPI) | Done | `/predict`, `/predict/batch`, `/health` running locally |
 | 5 | Docker | Done | Container that gives the same predictions as training |
-| 6 | Tests + CI | Next | Green CI badge |
-| 7 | Deploy (Azure Container Apps) | Not started | Live endpoint, automated deploy |
+| 6 | Tests + CI | Done locally, CI run pending | Green CI badge |
+| 7 | Deploy (Azure Container Apps) | Next | Live endpoint, automated deploy |
 | 8 | Monitoring | Not started | Scheduled drift report, shown firing once |
 | 9 | Retraining | Optional | Automated retrain and promotion check |
 
@@ -39,12 +39,12 @@ System:
 - **Registry:** local MLflow store; promotion is a separate, manual step; the API reads only `artifacts/`.
 - **API:** input ranges from the data with margins; unknown fields rejected; see [api.md](api.md).
 - **Docker:** multi-stage, serving-only requirements, model baked into the image; see [docker.md](docker.md).
+- **CI:** GitHub Actions builds the image and runs all tests; the exported model is committed so CI can build; see [ci.md](ci.md).
 - **Layout:** flat (`loan_default/` at the repo root), plain `.venv`, requirements files. The brief said `src/` layout; this replaced it.
 - **Data:** never committed. Kaggle labels it CC0; see the license section in [framing.md](framing.md).
 
 ## Open items
 
-- **Phase 6:** CI has no `artifacts/` (git-ignored); decide how the image build gets the model.
 - **Phase 8:** log inputs and predictions; the API does not yet.
 - **Phase 7:** verify Azure Container Apps pricing before deploying.
 - **Phase 7:** document why there is no Kubernetes.

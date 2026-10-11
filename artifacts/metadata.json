@@ -1,0 +1,357 @@
+{
+  "trained_at": "2026-10-08T20:36:15+00:00",
+  "sklearn_version": "1.9.1",
+  "lightgbm_version": "4.7.0",
+  "features": [
+    "purpose",
+    "home_ownership",
+    "verification_status",
+    "loan_amnt",
+    "annual_inc",
+    "dti",
+    "emp_length_years",
+    "fico",
+    "credit_history_months",
+    "delinq_2yrs",
+    "inq_last_6mths",
+    "mths_since_last_delinq",
+    "open_acc",
+    "total_acc",
+    "pub_rec",
+    "pub_rec_bankruptcies",
+    "revol_bal",
+    "revol_util",
+    "mort_acc",
+    "acc_open_past_24mths"
+  ],
+  "band_labels": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E"
+  ],
+  "band_thresholds": [
+    0.0714,
+    0.1047,
+    0.1425,
+    0.1959
+  ],
+  "periods": {
+    "fit": [
+      "2012-05",
+      "2014-06"
+    ],
+    "calibration": [
+      "2014-07",
+      "2014-12"
+    ],
+    "test": [
+      "2015-01",
+      "2015-10"
+    ]
+  },
+  "gbm_params": {
+    "min_child_samples": 400,
+    "n_estimators": 400,
+    "num_leaves": 7
+  },
+  "tuning": [
+    {
+      "min_child_samples": 400,
+      "n_estimators": 400,
+      "num_leaves": 7,
+      "mean_auc": 0.6700239919459032,
+      "fold_1": 0.6668175627384278,
+      "fold_2": 0.6676089129138023,
+      "fold_3": 0.6756455001854795
+    },
+    {
+      "min_child_samples": 400,
+      "n_estimators": 200,
+      "num_leaves": 15,
+      "mean_auc": 0.6694202322767341,
+      "fold_1": 0.6656040767636051,
+      "fold_2": 0.6672361236784082,
+      "fold_3": 0.6754204963881892
+    },
+    {
+      "min_child_samples": 100,
+      "n_estimators": 400,
+      "num_leaves": 7,
+      "mean_auc": 0.668999210582581,
+      "fold_1": 0.6645153415868258,
+      "fold_2": 0.6671685200053946,
+      "fold_3": 0.6753137701555227
+    },
+    {
+      "min_child_samples": 400,
+      "n_estimators": 400,
+      "num_leaves": 15,
+      "mean_auc": 0.6685928895652604,
+      "fold_1": 0.6619694566443667,
+      "fold_2": 0.6672277039938354,
+      "fold_3": 0.6765815080575793
+    },
+    {
+      "min_child_samples": 100,
+      "n_estimators": 200,
+      "num_leaves": 15,
+      "mean_auc": 0.6681242214082292,
+      "fold_1": 0.66363451751852,
+      "fold_2": 0.6659856301654111,
+      "fold_3": 0.6747525165407567
+    },
+    {
+      "min_child_samples": 400,
+      "n_estimators": 200,
+      "num_leaves": 7,
+      "mean_auc": 0.6679503786493504,
+      "fold_1": 0.6667539087050748,
+      "fold_2": 0.6650071492876536,
+      "fold_3": 0.6720900779553227
+    },
+    {
+      "min_child_samples": 400,
+      "n_estimators": 200,
+      "num_leaves": 31,
+      "mean_auc": 0.6679017384210789,
+      "fold_1": 0.6617682435133099,
+      "fold_2": 0.6662828300956939,
+      "fold_3": 0.6756541416542332
+    },
+    {
+      "min_child_samples": 400,
+      "n_estimators": 100,
+      "num_leaves": 31,
+      "mean_auc": 0.6676430462510833,
+      "fold_1": 0.6646413012755098,
+      "fold_2": 0.6650431225533442,
+      "fold_3": 0.6732447149243955
+    },
+    {
+      "min_child_samples": 100,
+      "n_estimators": 400,
+      "num_leaves": 15,
+      "mean_auc": 0.6676371456952058,
+      "fold_1": 0.6617561546069044,
+      "fold_2": 0.6654796918328238,
+      "fold_3": 0.6756755906458892
+    },
+    {
+      "min_child_samples": 100,
+      "n_estimators": 200,
+      "num_leaves": 7,
+      "mean_auc": 0.6672816343057275,
+      "fold_1": 0.6648442321678402,
+      "fold_2": 0.6649898309439352,
+      "fold_3": 0.6720108398054072
+    },
+    {
+      "min_child_samples": 100,
+      "n_estimators": 200,
+      "num_leaves": 31,
+      "mean_auc": 0.6668380732397535,
+      "fold_1": 0.6606999923168284,
+      "fold_2": 0.6648814193374056,
+      "fold_3": 0.6749328080650268
+    },
+    {
+      "min_child_samples": 400,
+      "n_estimators": 100,
+      "num_leaves": 15,
+      "mean_auc": 0.6664224054004693,
+      "fold_1": 0.6650670800500931,
+      "fold_2": 0.6637989175506028,
+      "fold_3": 0.670401218600712
+    },
+    {
+      "min_child_samples": 100,
+      "n_estimators": 100,
+      "num_leaves": 31,
+      "mean_auc": 0.6664213985779425,
+      "fold_1": 0.6628149697403307,
+      "fold_2": 0.6634345777533788,
+      "fold_3": 0.673014648240118
+    },
+    {
+      "min_child_samples": 100,
+      "n_estimators": 100,
+      "num_leaves": 15,
+      "mean_auc": 0.6655342161403823,
+      "fold_1": 0.6636105786424277,
+      "fold_2": 0.6626926601418406,
+      "fold_3": 0.6702994096368788
+    },
+    {
+      "min_child_samples": 400,
+      "n_estimators": 400,
+      "num_leaves": 31,
+      "mean_auc": 0.664011654273097,
+      "fold_1": 0.6536409233990268,
+      "fold_2": 0.66327961051846,
+      "fold_3": 0.6751144289018044
+    },
+    {
+      "min_child_samples": 100,
+      "n_estimators": 400,
+      "num_leaves": 31,
+      "mean_auc": 0.6633034908867174,
+      "fold_1": 0.6543605982119908,
+      "fold_2": 0.6614821607139684,
+      "fold_3": 0.6740677137341927
+    },
+    {
+      "min_child_samples": 400,
+      "n_estimators": 100,
+      "num_leaves": 7,
+      "mean_auc": 0.6616762887537045,
+      "fold_1": 0.6621227997725384,
+      "fold_2": 0.6584145794389958,
+      "fold_3": 0.6644914870495795
+    },
+    {
+      "min_child_samples": 100,
+      "n_estimators": 100,
+      "num_leaves": 7,
+      "mean_auc": 0.661367549267504,
+      "fold_1": 0.6613390963767709,
+      "fold_2": 0.6582720643761615,
+      "fold_3": 0.6644914870495795
+    }
+  ],
+  "walk_forward": [
+    {
+      "validation": "2013-07 to 2013-12",
+      "model": "baseline",
+      "fit_loans": 34292,
+      "auc": 0.6597310404182015,
+      "gini": 0.31946208083640304,
+      "brier": 0.10238457023201245,
+      "predicted": 0.12544133778794056,
+      "observed": 0.12047623865897669
+    },
+    {
+      "validation": "2013-07 to 2013-12",
+      "model": "gbm",
+      "fit_loans": 34292,
+      "auc": 0.6583856461403113,
+      "gini": 0.3167712922806225,
+      "brier": 0.10256880873916853,
+      "predicted": 0.12566918079196507,
+      "observed": 0.12047623865897669
+    },
+    {
+      "validation": "2014-01 to 2014-06",
+      "model": "baseline",
+      "fit_loans": 75416,
+      "auc": 0.6611561181761292,
+      "gini": 0.32231223635225836,
+      "brier": 0.1104578858433701,
+      "predicted": 0.12926337740353452,
+      "observed": 0.13223542491835175
+    },
+    {
+      "validation": "2014-01 to 2014-06",
+      "model": "gbm",
+      "fit_loans": 75416,
+      "auc": 0.6644211422471616,
+      "gini": 0.3288422844943233,
+      "brier": 0.11028004519606958,
+      "predicted": 0.1282199781458965,
+      "observed": 0.13223542491835175
+    },
+    {
+      "validation": "2014-07 to 2014-12",
+      "model": "baseline",
+      "fit_loans": 134714,
+      "auc": 0.669161556054424,
+      "gini": 0.3383231121088479,
+      "brier": 0.11611554389791677,
+      "predicted": 0.13546027011403522,
+      "observed": 0.141256966285935
+    },
+    {
+      "validation": "2014-07 to 2014-12",
+      "model": "gbm",
+      "fit_loans": 134714,
+      "auc": 0.6745703662131337,
+      "gini": 0.3491407324262674,
+      "brier": 0.11567755699207309,
+      "predicted": 0.13609632332239546,
+      "observed": 0.141256966285935
+    }
+  ],
+  "test_metrics": {
+    "baseline": {
+      "auc": 0.6736763332787207,
+      "gini": 0.34735266655744135,
+      "brier": 0.12023751252987029
+    },
+    "gbm": {
+      "auc": 0.6808397740660149,
+      "gini": 0.36167954813202985,
+      "brier": 0.11957290715190934
+    }
+  },
+  "test_bands": {
+    "A": {
+      "loans": 44736,
+      "share": 0.19660459781228162,
+      "predicted": 0.04959431052632989,
+      "observed": 0.048886802575107295
+    },
+    "B": {
+      "loans": 43315,
+      "share": 0.19035962433474113,
+      "predicted": 0.08811718989746063,
+      "observed": 0.09218515525799377
+    },
+    "C": {
+      "loans": 43829,
+      "share": 0.1926185380345693,
+      "predicted": 0.12285975411839789,
+      "observed": 0.13497912341143992
+    },
+    "D": {
+      "loans": 45099,
+      "share": 0.19819990067811358,
+      "predicted": 0.1672559181019971,
+      "observed": 0.17851837069558082
+    },
+    "E": {
+      "loans": 50564,
+      "share": 0.22221733914029437,
+      "predicted": 0.2579326607628436,
+      "observed": 0.2677992247448778
+    }
+  },
+  "psi_train_test": {
+    "pd": 0.004040935416415331,
+    "features": {
+      "verification_status": 0.06611364212563894,
+      "inq_last_6mths": 0.040677307429292466,
+      "dti": 0.023847109470131952,
+      "purpose": 0.02088959200681775,
+      "acc_open_past_24mths": 0.019755587327579864,
+      "revol_util": 0.019502256474171198,
+      "emp_length_years": 0.012360364322968175,
+      "open_acc": 0.010423392122053118,
+      "pub_rec": 0.009769556431358222,
+      "mths_since_last_delinq": 0.0097302716958168,
+      "credit_history_months": 0.009710356463711654,
+      "loan_amnt": 0.006986328115836212,
+      "revol_bal": 0.006250457035641057,
+      "mort_acc": 0.005209919954878405,
+      "home_ownership": 0.0049725864941012965,
+      "fico": 0.004337128130816997,
+      "delinq_2yrs": 0.003021824510019986,
+      "annual_inc": 0.002942422171976796,
+      "total_acc": 0.0018549980055681562,
+      "pub_rec_bankruptcies": 0.0013738956848779135
+    }
+  },
+  "model_name": "loan-default-pd",
+  "model_version": "1",
+  "run_id": "696bf8cdd2db4cf0883ed358baaf9047"
+}
