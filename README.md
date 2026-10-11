@@ -3,7 +3,7 @@
 A credit default model taken from training to a live, monitored API. The
 model is deliberately simple; the engineering around it is the point.
 
-**Status:** Phase 4 of 9 (API). The model trains, is versioned, and is served locally with FastAPI; not deployed yet.
+**Status:** Phase 5 of 9 (Docker). The model trains, is versioned, and is served with FastAPI, locally or in a container; not deployed yet.
 
 ## What it does
 
@@ -15,6 +15,7 @@ default and a risk band (A–E).
 - [docs/model.md](docs/model.md): model design and out-of-time results.
 - [docs/registry.md](docs/registry.md): how a model version goes live.
 - [docs/api.md](docs/api.md): endpoints, input rules, and design decisions.
+- [docs/docker.md](docs/docker.md): the image, and how it is tested against training.
 
 On loans issued in 2015, unseen in training, the model reaches an AUC of
 0.681 (Gini 0.362), against 0.674 for a logistic regression baseline.
@@ -29,7 +30,7 @@ key to `~/.kaggle/access_token` (plain text, `chmod 600`), or run
 
 ```bash
 python3 -m venv .venv
-.venv/bin/pip install -r requirements.txt -r requirements-dev.txt
+.venv/bin/pip install -r requirements-dev.txt
 .venv/bin/python -m loan_default.data.download  # fetches data into data/raw/
 .venv/bin/python -m loan_default.data.profile   # checks the framing against the data
 .venv/bin/python -m loan_default.data.prepare   # builds the modelling table
@@ -37,6 +38,7 @@ python3 -m venv .venv
 .venv/bin/python -m loan_default.registry promote 1   # makes version 1 the champion
 .venv/bin/python -m loan_default.registry export      # writes the champion to artifacts/
 .venv/bin/python -m uvicorn loan_default.api:app      # serves the API at http://127.0.0.1:8000/docs
+docker build -t loan-default:dev . && docker run --rm -p 8000:8000 loan-default:dev
 .venv/bin/python -m pytest                      # runs the tests
 ```
 

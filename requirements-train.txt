@@ -1,0 +1,6 @@
+# Training and registry, on top of the serving packages.
+-r requirements.txt
+pyarrow==25.0.1
+mlflow==3.17.0
+# Newer versions have no pre-built package for Intel Macs.
+cryptography==48.0.1

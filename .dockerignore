@@ -1,0 +1,6 @@
+*
+!requirements.txt
+!loan_default/
+!artifacts/model.joblib
+!artifacts/metadata.json
+**/__pycache__
