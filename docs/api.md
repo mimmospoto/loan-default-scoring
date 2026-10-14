@@ -53,6 +53,20 @@ has a type and a range; see `/docs` for the full list.
 Invalid input gets a `422` that names the field. In a batch, one bad
 application rejects the whole call, and the error says which one.
 
+## Authentication
+
+If the `API_KEY` environment variable is set, `/predict` and `/predict/batch`
+need a matching `X-API-Key` header, and anything else gets a `401`. `/health`
+stays open so the platform can probe it. With no `API_KEY`, scoring is open,
+which suits local runs and tests. A deployment must set the key.
+
+```bash
+curl -X POST http://127.0.0.1:8000/predict -H "X-API-Key: <key>" ...
+```
+
+The key is compared in constant time and checked before the input, so a caller
+without it learns nothing about the input rules.
+
 ## Design decisions
 
 - **Ranges come from the data, with margins.** Each limit is well outside what
@@ -75,7 +89,9 @@ application rejects the whole call, and the error says which one.
 
 ## Limitations
 
-- No authentication and no rate limit. Both belong to the deployment (Phase 7).
+- One shared key, no per-caller keys and no rate limit. That is enough for a
+  demo, not for real clients.
+- The service is open if `API_KEY` is left unset, so the deployment must set it.
 - Inputs and predictions are not logged yet. Drift monitoring (Phase 8) needs
   them.
 - Batch size is capped at 1,000 to keep response time predictable.

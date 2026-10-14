@@ -31,3 +31,28 @@ jobs:
         run: python -m pytest -ra
         env:
           REQUIRE_CONTAINER: "1"
+
+  # Publishes the tested image. Runs only for pushes to main, after the tests pass.
+  publish:
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build the image
+        run: |
+          IMAGE=ghcr.io/${GITHUB_REPOSITORY,,}
+          docker build --platform linux/amd64 \
+            --label org.opencontainers.image.source=https://github.com/${GITHUB_REPOSITORY} \
+            -t $IMAGE:latest -t $IMAGE:${GITHUB_SHA::7} .
+
+      - name: Push to GitHub Container Registry
+        run: |
+          IMAGE=ghcr.io/${GITHUB_REPOSITORY,,}
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
+          docker push $IMAGE:latest
+          docker push $IMAGE:${GITHUB_SHA::7}

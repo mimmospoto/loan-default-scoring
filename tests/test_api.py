@@ -174,3 +174,38 @@ def test_start_up_fails_without_an_exported_model(tmp_path):
     with pytest.raises(FileNotFoundError, match="registry export"):
         with TestClient(create_app(tmp_path)):
             pass
+
+
+@pytest.fixture(scope="module")
+def secured_client(trained):
+    with TestClient(create_app(trained[1], api_key="s3cret")) as test_client:
+        yield test_client
+
+
+@pytest.mark.parametrize("headers", [{}, {"X-API-Key": "wrong"}, {"X-API-Key": ""}])
+def test_scoring_needs_the_right_key_when_one_is_set(secured_client, headers):
+    application = make_applications(1, seed=12)[0]
+
+    single = secured_client.post("/predict", json=application, headers=headers)
+    batch = secured_client.post("/predict/batch", json={"applications": [application]}, headers=headers)
+
+    assert single.status_code == 401
+    assert batch.status_code == 401
+
+
+def test_the_right_key_is_accepted(secured_client):
+    application = make_applications(1, seed=13)[0]
+    headers = {"X-API-Key": "s3cret"}
+
+    assert secured_client.post("/predict", json=application, headers=headers).status_code == 200
+    batch = {"applications": [application]}
+    assert secured_client.post("/predict/batch", json=batch, headers=headers).status_code == 200
+
+
+def test_health_stays_open_when_a_key_is_set(secured_client):
+    assert secured_client.get("/health").status_code == 200
+
+
+def test_the_key_is_checked_before_the_input(secured_client):
+    # A caller without the key learns nothing about the input rules.
+    assert secured_client.post("/predict", json={}).status_code == 401

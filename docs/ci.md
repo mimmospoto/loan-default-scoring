@@ -13,6 +13,14 @@ The tests cover features, splits, metrics, the registry export, the API
 contract, and the container. The container test starts the real image and
 checks that it predicts exactly like the training code.
 
+## Publishing
+
+After the tests pass on a push to `main`, a second job builds the image again
+and pushes it to GitHub Container Registry as
+`ghcr.io/mimmospoto/loan-default-scoring`, tagged `latest` and with the short
+commit hash. Pull requests only run the tests. The job uses the built-in
+`GITHUB_TOKEN`, so there is no password to manage.
+
 ## Design decisions
 
 - **The exported model is committed.** `artifacts/model.joblib` (371 KB) and
@@ -32,5 +40,7 @@ checks that it predicts exactly like the training code.
 
 - No linting or type checking yet.
 - No vulnerability scan of the image.
-- The workflow builds the image but does not publish it. Publishing and
-  deploying come in Phase 7.
+- The publish job rebuilds the image instead of reusing the tested one. The
+  inputs are identical, but a stricter setup would push the exact image the
+  tests ran against.
+- Deploying to Azure comes next (Phase 7).
