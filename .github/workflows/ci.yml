@@ -12,9 +12,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version-file: .python-version
           cache: pip
@@ -41,7 +41,7 @@ jobs:
       contents: read
       packages: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Build the image
         run: |
@@ -68,7 +68,7 @@ jobs:
       RESOURCE_GROUP: rg-loan-default
       APP_NAME: loan-default-api
     steps:
-      - uses: azure/login@v2
+      - uses: azure/login@v3
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
