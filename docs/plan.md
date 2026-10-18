@@ -48,7 +48,6 @@ System:
 
 - **Phase 8:** log inputs and predictions; the API does not yet.
 - **Before going public:** the repo is private and the trained model is committed (see [ci.md](ci.md)); confirm that is fine to publish.
-- **Not yet done:** no architecture diagram.
 - **Live URL:** kept out of the README on purpose, because bots would keep the app awake and cost money; shared privately with the key.
 
 ## Working style

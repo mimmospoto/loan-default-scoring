@@ -25,6 +25,45 @@ On loans issued in 2015, unseen in training, the model reaches an AUC of
 0.681 (Gini 0.362), against 0.674 for a logistic regression baseline.
 Observed default rates rise from 4.9% in band A to 26.8% in band E.
 
+## Architecture
+
+```mermaid
+flowchart LR
+    subgraph local["Training (local)"]
+        kaggle[("Kaggle data<br/>never committed")] --> prep["prepare<br/>features + target"]
+        prep --> train["train<br/>LightGBM + calibration"]
+        train --> mlflow[("MLflow<br/>tracking + registry")]
+        mlflow -->|"promote + export"| art["model.joblib<br/>metadata.json"]
+    end
+
+    art -->|"git push"| repo["GitHub repo"]
+
+    subgraph ci["GitHub Actions"]
+        test["test<br/>unit + container parity"] --> publish["publish<br/>image to GHCR"]
+        publish --> deploy["deploy<br/>OIDC login"]
+    end
+
+    repo --> test
+    deploy --> app
+
+    subgraph azure["Azure Container Apps (North Europe)"]
+        app["FastAPI service<br/>scale 0 to 1"]
+    end
+
+    client["Lender"] -->|"POST /predict<br/>X-API-Key"| app
+    app -->|"pd + risk band"| client
+
+    app -.->|"planned: logs"| drift["Drift report<br/>PSI, scheduled"]
+    kaggle -.->|"planned: later vintages"| drift
+```
+
+- **Training stays offline.** The service never touches MLflow or the data; it
+  loads two exported files.
+- **One image is one model version.** CI builds the image from the committed
+  model and tests that it predicts exactly like the training code.
+- **Deploys are automatic** after the tests pass. Dashed lines are Phase 8,
+  not built yet.
+
 ## Live endpoint
 
 The service is deployed on Azure Container Apps (North Europe). Its address and
