@@ -5,7 +5,7 @@
 A credit default model taken from training to a live, monitored API. The
 model is deliberately simple; the engineering around it is the point.
 
-**Status:** Phase 6 of 9 (CI). The model trains, is versioned, and is served with FastAPI, locally or in a container; tests run in CI; not deployed yet.
+**Status:** Phase 7 of 9 (Deploy). The model trains, is versioned, and is served with FastAPI in a container. CI tests it and deploys it to Azure Container Apps.
 
 ## What it does
 
@@ -19,10 +19,18 @@ default and a risk band (A–E).
 - [docs/api.md](docs/api.md): endpoints, input rules, and design decisions.
 - [docs/docker.md](docs/docker.md): the image, and how it is tested against training.
 - [docs/ci.md](docs/ci.md): what CI runs and why the model is committed.
+- [docs/deploy.md](docs/deploy.md): how it is deployed to Azure, cost, and why no Kubernetes.
 
 On loans issued in 2015, unseen in training, the model reaches an AUC of
 0.681 (Gini 0.362), against 0.674 for a logistic regression baseline.
 Observed default rates rise from 4.9% in band A to 26.8% in band E.
+
+## Live endpoint
+
+The service is deployed on Azure Container Apps (North Europe). Its address and
+API key are not published here, to keep it from being scanned and billed. Ask
+the author for both; see [docs/deploy.md](docs/deploy.md) for the setup, cost
+and design decisions.
 
 ## Try it
 
