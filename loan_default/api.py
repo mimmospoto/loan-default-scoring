@@ -15,6 +15,7 @@ from pathlib import Path
 from fastapi import Depends, FastAPI, HTTPException, Request, Security
 from fastapi.security import APIKeyHeader
 
+from loan_default import request_log
 from loan_default.config import ARTIFACTS_DIR
 from loan_default.schemas import (
     BatchRequest,
@@ -32,6 +33,8 @@ def create_app(artifacts_dir: Path | None = None, api_key: str | None = None) ->
     # With no key configured, scoring is open (local use). Deployments set API_KEY.
     expected_key = api_key or os.environ.get("API_KEY")
     key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
+
+    request_log.configure()
 
     def require_key(supplied: str | None = Security(key_header)) -> None:
         if expected_key and not (supplied and secrets.compare_digest(supplied, expected_key)):
@@ -57,19 +60,22 @@ def create_app(artifacts_dir: Path | None = None, api_key: str | None = None) ->
     @app.post("/predict", response_model=PredictResponse, dependencies=[Depends(require_key)])
     def predict(application: LoanApplication, request: Request):
         scorer: Scorer = request.app.state.scorer
-        [(probability, band)] = scorer.score([application])
-        return PredictResponse(
-            pd=probability, risk_band=band, model_version=scorer.version, request_id=str(uuid.uuid4())
-        )
+        scores = scorer.score([application])
+        request_id = str(uuid.uuid4())
+        request_log.log_scores(request_id, scorer.version, [application], scores)
+        [(probability, band)] = scores
+        return PredictResponse(pd=probability, risk_band=band, model_version=scorer.version, request_id=request_id)
 
     @app.post("/predict/batch", response_model=BatchResponse, dependencies=[Depends(require_key)])
     def predict_batch(batch: BatchRequest, request: Request):
         scorer: Scorer = request.app.state.scorer
         scores = scorer.score(batch.applications)
+        request_id = str(uuid.uuid4())
+        request_log.log_scores(request_id, scorer.version, batch.applications, scores)
         return BatchResponse(
             predictions=[Prediction(pd=p, risk_band=b) for p, b in scores],
             model_version=scorer.version,
-            request_id=str(uuid.uuid4()),
+            request_id=request_id,
         )
 
     return app

@@ -11,7 +11,7 @@ Build order. Each phase ends with something working.
 | 5 | Docker | Done | Container that gives the same predictions as training |
 | 6 | Tests + CI | Done | Green CI badge |
 | 7 | Deploy (Azure Container Apps) | Done | Live endpoint, automated deploy |
-| 8 | Monitoring | Next | Scheduled drift report, shown firing once |
+| 8 | Monitoring | Done | Drift report, scheduled self-check, shown firing once |
 | 9 | Retraining | Optional | Automated retrain and promotion check |
 
 ## Success criteria
@@ -41,12 +41,12 @@ System:
 - **Docker:** multi-stage, serving-only requirements, model baked into the image; see [docker.md](docker.md).
 - **CI:** GitHub Actions builds the image and runs all tests; the exported model is committed so CI can build; see [ci.md](ci.md).
 - **Deploy:** Azure Container Apps in North Europe, deployed from CI with passwordless login, scale to zero, one shared API key; see [deploy.md](deploy.md).
+- **Monitoring:** PSI on features and on the PD, reported with Evidently; request log on stdout; weekly self-check on made-up traffic; see [monitoring.md](monitoring.md).
 - **Layout:** flat (`loan_default/` at the repo root), plain `.venv`, requirements files. The brief said `src/` layout; this replaced it.
 - **Data:** never committed. Kaggle labels it CC0; see the license section in [framing.md](framing.md).
 
 ## Open items
 
-- **Phase 8:** log inputs and predictions; the API does not yet.
 - **Before going public:** the repo is private and the trained model is committed (see [ci.md](ci.md)); confirm that is fine to publish.
 - **Live URL:** kept out of the README on purpose, because bots would keep the app awake and cost money; shared privately with the key.
 

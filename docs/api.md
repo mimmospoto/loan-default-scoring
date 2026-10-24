@@ -92,6 +92,7 @@ without it learns nothing about the input rules.
 - One shared key, no per-caller keys and no rate limit. That is enough for a
   demo, not for real clients.
 - The service is open if `API_KEY` is left unset, so the deployment must set it.
-- Inputs and predictions are not logged yet. Drift monitoring (Phase 8) needs
-  them.
+- Every scored application is logged as one JSON line on stdout (see
+  [monitoring.md](monitoring.md)). Requests rejected by validation or by the key
+  check are not logged.
 - Batch size is capped at 1,000 to keep response time predictable.

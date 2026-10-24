@@ -25,5 +25,8 @@ artifacts/*
 !artifacts/model.joblib
 !artifacts/metadata.json
 
+# Drift reports are written here; the 2017 summary lives in docs/
+reports/
+
 # Personal notebooks
 notebook/

@@ -1,0 +1,39 @@
+name: Drift check
+
+# Weekly self-check of the monitoring pipeline, plus a button to run it by hand.
+# It uses made-up traffic scored by the committed model, because the Lending Club
+# data is never in the repository. See docs/monitoring.md.
+on:
+  schedule:
+    - cron: "0 6 * * 1" # Mondays, 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version-file: .python-version
+          cache: pip
+          cache-dependency-path: requirements-monitor.txt
+
+      - run: pip install -r requirements-monitor.txt
+
+      - name: Run the drift self-check
+        run: python -m loan_default.drift --self-check --out reports
+      
+      - name: Show the summaries
+        if: always()
+        run: cat reports/*/summary.md >> "$GITHUB_STEP_SUMMARY"
+      
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: drift-reports
+          path: reports/

@@ -1,0 +1,3 @@
+# Drift reports, on top of the serving packages. Not part of the Docker image.
+-r requirements.txt
+evidently==0.7.23

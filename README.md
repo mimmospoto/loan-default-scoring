@@ -5,7 +5,7 @@
 A credit default model taken from training to a live, monitored API. The
 model is deliberately simple; the engineering around it is the point.
 
-**Status:** Phase 7 of 9 (Deploy). The model trains, is versioned, and is served with FastAPI in a container. CI tests it and deploys it to Azure Container Apps.
+**Status:** Phase 8 of 9 (Monitoring). The model trains, is versioned, and is served with FastAPI in a container. CI tests it and deploys it to Azure Container Apps. A drift report compares live and later data with the training data.
 
 ## What it does
 
@@ -20,6 +20,7 @@ default and a risk band (A–E).
 - [docs/docker.md](docs/docker.md): the image, and how it is tested against training.
 - [docs/ci.md](docs/ci.md): what CI runs and why the model is committed.
 - [docs/deploy.md](docs/deploy.md): how it is deployed to Azure, cost, and why no Kubernetes.
+- [docs/monitoring.md](docs/monitoring.md): what is monitored, the drift report, and what it cannot see.
 
 On loans issued in 2015, unseen in training, the model reaches an AUC of
 0.681 (Gini 0.362), against 0.674 for a logistic regression baseline.
@@ -53,16 +54,20 @@ flowchart LR
     client["Lender"] -->|"POST /predict<br/>X-API-Key"| app
     app -->|"pd + risk band"| client
 
-    app -.->|"planned: logs"| drift["Drift report<br/>PSI, scheduled"]
-    kaggle -.->|"planned: later vintages"| drift
+    app -->|"request log<br/>(stdout)"| logs[("Azure logs")]
+    logs -.->|"export by hand"| drift["Drift report<br/>Evidently, PSI"]
+    kaggle -->|"later vintages"| drift
+    cron["Weekly cron<br/>self-check"] --> drift
 ```
 
 - **Training stays offline.** The service never touches MLflow or the data; it
   loads two exported files.
 - **One image is one model version.** CI builds the image from the committed
   model and tests that it predicts exactly like the training code.
-- **Deploys are automatic** after the tests pass. Dashed lines are Phase 8,
-  not built yet.
+- **Deploys are automatic** after the tests pass.
+- **Monitoring** compares the training data with later vintages or with the
+  request log. The weekly job tests the report itself on made-up traffic. The
+  dashed line is manual; see [docs/monitoring.md](docs/monitoring.md).
 
 ## Live endpoint
 
