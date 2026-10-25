@@ -58,5 +58,6 @@ gives exactly the same predictions as the model that was trained.
 ## Limitations
 
 - The local store lives on one machine. Nobody else can see the runs.
-- Promotion is manual. There is no automatic check that a new version beats
-  the champion.
+- Promotion is manual. `python -m loan_default.retrain` checks a challenger against
+  the champion with a gate (see [retraining.md](retraining.md)); `registry promote`
+  itself does not check anything.

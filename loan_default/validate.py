@@ -14,9 +14,18 @@ from loan_default.model import build_baseline, build_gbm, fit_calibrated, predic
 from loan_default.splits import between, split_xy
 
 
-def walk_forward(table: pd.DataFrame, gbm_params: dict, folds: list[dict] = WALK_FORWARD_FOLDS) -> pd.DataFrame:
-    """One row per fold and model, scored on that fold's validation period."""
-    builders = {"baseline": build_baseline, "gbm": lambda: build_gbm(**gbm_params)}
+def walk_forward(
+    table: pd.DataFrame,
+    gbm_params: dict,
+    folds: list[dict] = WALK_FORWARD_FOLDS,
+    builders: dict | None = None,
+) -> pd.DataFrame:
+    """One row per fold and model, scored on that fold's validation period.
+
+    `builders` maps a name to a function that returns a fresh pipeline. The default is the
+    baseline and the tuned LightGBM.
+    """
+    builders = builders or {"baseline": build_baseline, "gbm": lambda: build_gbm(**gbm_params)}
     rows = []
     for fold in folds:
         X_fit, y_fit = split_xy(between(table, fold["fit"]))

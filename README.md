@@ -5,7 +5,7 @@
 A credit default model taken from training to a live, monitored API. The
 model is deliberately simple; the engineering around it is the point.
 
-**Status:** Phase 8 of 9 (Monitoring). The model trains, is versioned, and is served with FastAPI in a container. CI tests it and deploys it to Azure Container Apps. A drift report compares live and later data with the training data.
+**Status:** Phase 9 of 9 (Retraining). The model trains, is versioned, and is served with FastAPI in a container. CI tests it and deploys it to Azure Container Apps. A drift report compares live and later data with the training data. A challenger model must pass a gate before it can replace the champion.
 
 ## What it does
 
@@ -21,6 +21,7 @@ default and a risk band (A–E).
 - [docs/ci.md](docs/ci.md): what CI runs and why the model is committed.
 - [docs/deploy.md](docs/deploy.md): how it is deployed to Azure, cost, and why no Kubernetes.
 - [docs/monitoring.md](docs/monitoring.md): what is monitored, the drift report, and what it cannot see.
+- [docs/retraining.md](docs/retraining.md): how a challenger model is tested against the champion, and the promotion gate.
 
 On loans issued in 2015, unseen in training, the model reaches an AUC of
 0.681 (Gini 0.362), against 0.674 for a logistic regression baseline.
