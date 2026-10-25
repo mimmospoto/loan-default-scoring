@@ -48,6 +48,12 @@ the 10-bin PSI that the 0.1 / 0.25 thresholds are meant for. For example it gave
 our own `psi` (deciles of the reference, the same as at training time) to
 Evidently. Evidently provides the HTML report and plots.
 
+**The banner.** Evidently's "Dataset Drift" banner counts the share of columns that
+drifted, and by default needs half of them. One badly shifted feature would show
+"NOT detected" while our verdict said drift. The report sets that share to 0.01,
+so one column at 0.25 or more is enough, the same as the verdict. The 0.1 to 0.25
+warning level is only in `summary.md`, not in the banner.
+
 ## Result on later vintages
 
 The model was trained on 2012-05 to 2014-12. Compared with that period:

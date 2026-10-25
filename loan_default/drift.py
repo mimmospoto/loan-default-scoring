@@ -56,6 +56,10 @@ def psi_test(reference: pd.Series, current: pd.Series, feature_type, threshold: 
 
 
 PSI_METHOD = "decile_psi"
+# Evidently's banner says "Dataset Drift" when this share of columns drifted. Its default is
+# 0.5, so one badly shifted feature goes unnoticed. This small value makes one column enough,
+# the same rule as our verdict.
+ANY_COLUMN = 0.01
 
 
 def register_psi_method() -> None:
@@ -132,7 +136,7 @@ def compare(reference: pd.DataFrame, current: pd.DataFrame) -> DriftResult:
     columns = MODEL_FEATURES + ["pd"]
     ref, cur = _sample(reference)[columns], _sample(current)[columns]
 
-    snapshot = Report([DataDriftPreset(method=PSI_METHOD, threshold=DRIFT_PSI)]).run(cur, ref)
+    snapshot = Report([DataDriftPreset(method=PSI_METHOD, threshold=DRIFT_PSI, drift_share=ANY_COLUMN)]).run(cur, ref)
     values = {
         metric["config"]["column"]: float(metric["value"])
         for metric in snapshot.dict()["metrics"]
