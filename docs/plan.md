@@ -48,7 +48,7 @@ System:
 
 ## Open items
 
-- **Before going public:** the repo is private and the trained model is committed (see [ci.md](ci.md)); confirm that is fine to publish.
+- **Cost:** recheck Azure Cost analysis now that the repo is public (the address is not in the repo or its CI logs; see [deploy.md](deploy.md)).
 - **Live URL:** kept out of the README on purpose, because bots would keep the app awake and cost money; shared privately with the key.
 
 ## Working style
