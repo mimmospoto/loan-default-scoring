@@ -74,6 +74,12 @@ wakes the app and counts as active time, so a bot hitting a public address
 could keep it running all month. The address and the key are shared together
 with people who ask. If the cost ever grows, deactivate the revision.
 
+CI logs of a public repository are public too. By default `az containerapp update`
+prints the whole app definition, which includes the address, so the deploy job
+uses `--output none` and masks the address in the health check. Runs from before
+that fix contain it, so delete them (`gh run delete <id>`) before making the
+repository public.
+
 ## Operations
 
 - **Check the service:** `GET /health` returns the model version that is loaded.

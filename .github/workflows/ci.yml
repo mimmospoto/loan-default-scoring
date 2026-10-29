@@ -78,12 +78,14 @@ jobs:
       - name: Deploy the new image
         run: |
           IMAGE=ghcr.io/${GITHUB_REPOSITORY,,}:${GITHUB_SHA::7}
-          az containerapp update --name $APP_NAME --resource-group $RESOURCE_GROUP --image $IMAGE
+          # --output none: the default output is the whole app definition, including its public address.
+          az containerapp update --name $APP_NAME --resource-group $RESOURCE_GROUP --image $IMAGE --output none
 
       - name: Check the service is healthy
         run: |
           FQDN=$(az containerapp show --name $APP_NAME --resource-group $RESOURCE_GROUP \
             --query properties.configuration.ingress.fqdn -o tsv)
+          echo "::add-mask::$FQDN"
           for i in $(seq 1 12); do
             curl -sf https://$FQDN/health && exit 0
             sleep 10
