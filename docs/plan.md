@@ -23,11 +23,11 @@ Model:
 - PSI between train and test (done)
 
 System:
-- Live endpoint
-- Container gives the same predictions as training, tested
-- CI green
-- Automated deploy
-- Scheduled drift report, shown firing once on later vintages
+- Live endpoint (done; address shared privately)
+- Container gives the same predictions as training, tested (done)
+- CI green (done)
+- Automated deploy (done)
+- Scheduled drift report, shown firing once on later vintages (done: 2016 stable, 2017 warning; see [monitoring.md](monitoring.md))
 
 ## Decisions taken
 

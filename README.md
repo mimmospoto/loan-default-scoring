@@ -1,6 +1,10 @@
 # Loan default scoring service
 
 [![CI](https://github.com/mimmospoto/loan-default-scoring/actions/workflows/ci.yml/badge.svg)](https://github.com/mimmospoto/loan-default-scoring/actions/workflows/ci.yml)
+[![Drift check](https://github.com/mimmospoto/loan-default-scoring/actions/workflows/drift.yml/badge.svg)](https://github.com/mimmospoto/loan-default-scoring/actions/workflows/drift.yml)
+![Python 3.13](https://img.shields.io/badge/python-3.13-blue)
+![Deployed on Azure Container Apps](https://img.shields.io/badge/deployed%20on-Azure%20Container%20Apps-0078D4)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 A credit default model taken from training to a live, monitored API. The
 model is deliberately simple; the engineering around it is the point.
@@ -70,6 +74,30 @@ flowchart LR
   request log. The weekly job tests the report itself on made-up traffic. The
   dashed line is manual; see [docs/monitoring.md](docs/monitoring.md).
 
+## Design decisions
+
+The reasoning is in the docs. The choices a reviewer is most likely to ask about:
+
+- **Out-of-time validation, not a random split.** Train on 2012–2014 loans, test on
+  2015. A random split would let the model see the future. See
+  [framing](docs/framing.md).
+- **Leakage and fairness by design.** Lending Club's own grade, interest rate and
+  installment are excluded because they come from its own risk model. Geography and
+  free text are excluded because they can proxy protected attributes. No fairness
+  audit is done; see [monitoring](docs/monitoring.md#what-it-cannot-see).
+- **A simple, calibrated model.** LightGBM beats a logistic regression by only 0.7
+  AUC points, and probabilities are calibrated so that bands mean something. See
+  [model](docs/model.md).
+- **The service needs only two files.** MLflow stays in training; the API loads
+  `model.joblib` and `metadata.json`. A test shows the container gives the same
+  predictions as the training code. See [registry](docs/registry.md) and
+  [docker](docs/docker.md).
+- **No Kubernetes.** One small stateless service does not need it. Azure Container
+  Apps gives HTTPS, scale to zero and revisions. See [deploy](docs/deploy.md).
+- **Promotion is a human step.** A challenger must pass a gate, and even then
+  nothing is exported or deployed automatically. In the run so far, none passed.
+  See [retraining](docs/retraining.md).
+
 ## Live endpoint
 
 The service is deployed on Azure Container Apps (North Europe). Its address and
@@ -102,13 +130,14 @@ curl -X POST http://127.0.0.1:8000/predict -H "Content-Type: application/json" -
 }'
 ```
 
-The response has `pd`, `risk_band`, `model_version` and `request_id`. Without
+The response has `pd`, `risk_band`, `model_version` and `request_id`. For the
+application above it is `pd` 0.133 and band C, from model version 1. Without
 Docker: `pip install -r requirements.txt`, then
 `python -m uvicorn loan_default.api:app`.
 
 ## Setup
 
-Requires Python 3.12+ and a Kaggle API token. Generate one at
+Requires Python 3.13 (see `.python-version`) and a Kaggle API token. Generate one at
 [kaggle.com/settings/api](https://www.kaggle.com/settings/api) and save the
 key to `~/.kaggle/access_token` (plain text, `chmod 600`), or run
 `kaggle auth login`. On macOS, LightGBM also needs `brew install libomp`.
@@ -125,9 +154,11 @@ python3 -m venv .venv
 .venv/bin/python -m uvicorn loan_default.api:app      # serves the API at http://127.0.0.1:8000/docs
 docker build -t loan-default:dev . && docker run --rm -p 8000:8000 loan-default:dev
 .venv/bin/python -m pytest                      # runs the tests
+.venv/bin/python -m loan_default.drift --current-period 2017-01 2017-12   # drift report, writes reports/
+.venv/bin/python -m loan_default.retrain              # challengers against the champion (nothing is saved)
 ```
 
-The data is never committed to this repository. It comes from the Kaggle
+The code is MIT licensed (see [LICENSE](LICENSE)). The data is never committed to this repository. It comes from the Kaggle
 dataset `wordsforthewise/lending-club`, labelled CC0; see
 [docs/framing.md](docs/framing.md#license) for the license check.
 

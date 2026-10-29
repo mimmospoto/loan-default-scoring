@@ -90,4 +90,4 @@ with people who ask. If the cost ever grows, deactivate the revision.
 - A cold start after idle time.
 - The publish job rebuilds the image rather than reusing the tested one.
 - No staging environment: a passing build goes straight to the live service.
-- Inputs and predictions are not logged yet (Phase 8).
+- Scored requests are logged to stdout and so reach Azure's logs, but nothing reads them on a schedule; see [monitoring.md](monitoring.md).
