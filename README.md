@@ -71,7 +71,7 @@ flowchart LR
   model and tests that it predicts exactly like the training code.
 - **Deploys are automatic** after the tests pass.
 - **Monitoring** compares the training data with later vintages or with the
-  request log. The weekly job tests the report itself on made-up traffic. The
+  request log. The monthly job tests the report itself on made-up traffic. The
   dashed line is manual; see [docs/monitoring.md](docs/monitoring.md).
 
 ## Design decisions
