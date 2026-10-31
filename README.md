@@ -9,7 +9,7 @@
 A credit default model taken from training to a live, monitored API. The
 model is deliberately simple; the engineering around it is the point.
 
-**Status:** Phase 9 of 9 (Retraining). The model trains, is versioned, and is served with FastAPI in a container. CI tests it and deploys it to Azure Container Apps. A drift report compares live and later data with the training data. A challenger model must pass a gate before it can replace the champion.
+**Status:** complete (all 9 phases). The model trains, is versioned, and is served with FastAPI in a container. CI tests it and deploys it to Azure Container Apps. A drift report compares live and later data with the training data. A challenger model must pass a gate before it can replace the champion.
 
 ## What it does
 
