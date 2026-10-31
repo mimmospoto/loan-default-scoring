@@ -62,7 +62,7 @@ flowchart LR
     app -->|"request log<br/>(stdout)"| logs[("Azure logs")]
     logs -.->|"export by hand"| drift["Drift report<br/>Evidently, PSI"]
     kaggle -->|"later vintages"| drift
-    cron["Weekly cron<br/>self-check"] --> drift
+    cron["Monthly cron<br/>self-check"] --> drift
 ```
 
 - **Training stays offline.** The service never touches MLflow or the data; it

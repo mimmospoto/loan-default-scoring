@@ -1,11 +1,11 @@
 name: Drift check
 
-# Weekly self-check of the monitoring pipeline, plus a button to run it by hand.
+# Monthly self-check of the monitoring pipeline, plus a button to run it by hand.
 # It uses made-up traffic scored by the committed model, because the Lending Club
 # data is never in the repository. See docs/monitoring.md.
 on:
   schedule:
-    - cron: "0 6 1 * *" # Mondays, 06:00 UTC
+    - cron: "0 6 1 * *" # 1st of each month, 06:00 UTC
   workflow_dispatch:
 
 permissions:

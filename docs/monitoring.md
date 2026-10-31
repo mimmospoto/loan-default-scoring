@@ -72,7 +72,7 @@ The model was trained on 2012-05 to 2014-12. Compared with that period:
 
 ## The schedule
 
-`.github/workflows/drift.yml` runs every Monday at 06:00 UTC, and on demand from
+`.github/workflows/drift.yml` runs on the 1st of each month at 06:00 UTC, and on demand from
 the Actions tab. It runs `--self-check`: made-up applications go through the
 committed model, once unchanged and once shifted. The job fails if the unchanged
 window is not stable or the shifted one is not flagged. The reports are attached
