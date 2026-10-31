@@ -102,8 +102,11 @@ The reasoning is in the docs. The choices a reviewer is most likely to ask about
 
 The service is deployed on Azure Container Apps (North Europe). Its address and
 API key are not published here, to keep it from being scanned and billed. Ask
-the author for both; see [docs/deploy.md](docs/deploy.md) for the setup, cost
-and design decisions.
+the author for both; see [docs/deploy.md](docs/deploy.md) for the setup and cost.
+
+A call to the live service (address partly hidden):
+
+![A /predict call to the live Azure service](docs/images/live-predict.png)
 
 ## Try it
 
